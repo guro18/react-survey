@@ -5,6 +5,7 @@ export default function AnswersList(props) {
   console.log("Inside AnswersList: ", props);
 
   const { answersList } = props;
+  console.log('answersList: ', answersList);
 
   return (
     <ul>

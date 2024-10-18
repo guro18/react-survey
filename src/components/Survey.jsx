@@ -33,9 +33,6 @@ function Survey() {
 
   const handleCheckboxChange = (name, value, checked) => {
     const updateFormData = { ...formData };
-    console.log("formdata, ", formData);
-    console.log("name, ", name);
-    console.log("formdata[name]: ", formData)
     if (checked) {
       if (!Array.isArray(updateFormData[name])) {
         updateFormData[name] = [];
@@ -49,13 +46,8 @@ function Survey() {
 
   const HandleChange = (event) => {
     const { name, type, value, checked } = event.target;
-  
     if (name !== undefined) {
       if (type === "checkbox") {
-        console.log('name, ', name)
-        console.log('type, ', type)
-        console.log('value, ', value)
-        console.log('checked, ', checked)
         handleCheckboxChange(name, value, checked);
       } else {
         setFormData({ ...formData, [name]: value });
@@ -66,8 +58,17 @@ function Survey() {
 
   const handleSubmit = () => {
     const newAnswerItem = { ...formData };
+    // console.log('newAnswer: ', newAnswerItem);
+    // console.log('formData: ', formData);
     setSubmittedAnswers([...submittedAnswers, newAnswerItem]);
+    console.log('submitted formdata: ', submittedAnswers);
     setFormData(INITIAL_FORM_DATA); // Reset form data
+  };
+
+  const handleEdit = (index) => {
+    const newAnswerItem = {...formData};
+    setSubmittedAnswers[index](newAnswerItem);
+    setFormData(INITIAL_FORM_DATA);
   };
 
   return (
@@ -75,7 +76,12 @@ function Survey() {
       <section className={`survey__list ${open ? "open" : ""}`}>
         <h2>Answers list</h2>
         {submittedAnswers.map((answer, index) => (
-          <AnswersItem key={index} answerItem={answer} />
+          <AnswersItem 
+          key={index} 
+          answerItem={answer} 
+          index={index}
+          handleEdit={() => handleEdit(index)}
+          />
         ))}
       </section>
       <section className="survey__form">
@@ -125,7 +131,7 @@ function Survey() {
         </form>
       </section>
     </main>
-  );
+  )
 }
 
 export default Survey;

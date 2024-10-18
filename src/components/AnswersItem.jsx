@@ -37,9 +37,10 @@ export default function AnswersItem({
     features, 
     worstBits, 
     timeSpent, 
-    review }
-
+    review },
+    index
 }) {
+  console.log('answerItem:', index, { username, color, consistency, logo, features, worstBits, timeSpent, review });
   return (
     <li>
       <article className="answer">
