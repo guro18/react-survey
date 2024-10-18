@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import AnswersItem from "./AnswersItem";
 import BestFeatures from "./BestFeatures";

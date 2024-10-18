@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 function SpendTime ({formData, HandleChange}) {
     
     return (
