@@ -38,9 +38,10 @@ export default function AnswersItem({
     worstBits, 
     timeSpent, 
     review },
-    index
+    index,
+    handleEdit,
 }) {
-  console.log('answerItem:', index, { username, color, consistency, logo, features, worstBits, timeSpent, review });
+
   return (
     <li>
       <article className="answer">
@@ -84,7 +85,7 @@ export default function AnswersItem({
           <span className="answer__line">{review}</span>
         </p>
 
-        <button>Edit</button>
+        <button onClick={() => handleEdit(index)}>Edit</button>
       </article>
     </li>
   );

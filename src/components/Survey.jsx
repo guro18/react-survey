@@ -58,16 +58,13 @@ function Survey() {
 
   const handleSubmit = () => {
     const newAnswerItem = { ...formData };
-    // console.log('newAnswer: ', newAnswerItem);
-    // console.log('formData: ', formData);
     setSubmittedAnswers([...submittedAnswers, newAnswerItem]);
-    console.log('submitted formdata: ', submittedAnswers);
     setFormData(INITIAL_FORM_DATA); // Reset form data
   };
 
   const handleEdit = (index) => {
     const newAnswerItem = {...formData};
-    setSubmittedAnswers[index](newAnswerItem);
+    submittedAnswers[index] = newAnswerItem;
     setFormData(INITIAL_FORM_DATA);
   };
 
@@ -84,6 +81,7 @@ function Survey() {
           />
         ))}
       </section>
+
       <section className="survey__form">
         <form className="form">
           <h2>Tell us what you think about your rubber duck!</h2>
@@ -93,35 +91,39 @@ function Survey() {
           <DuckColour formData={formData} HandleChange={HandleChange}/>
           <DuckLogo formData={formData} HandleChange={HandleChange}/>
           <SpendTime formData={formData} HandleChange={HandleChange}/>
+
           <label>
-          What else have you got to say about your rubber duck?
-          <textarea
-            onChange={HandleChange}
-            name="review"
-            cols="30"
-            rows="10"
-            value={formData.review}
-          >
-          </textarea>
+            What else have you got to say about your rubber duck?
+            <textarea
+              onChange={HandleChange}
+              name="review"
+              cols="30"
+              rows="10"
+              value={formData.review}
+            >
+            </textarea>
           </label>
+
           <label>
-          Put your name here (if you feel like it):
-          <input
-            onChange={HandleChange}
-            type="text"
-            name="username"
-            value={formData.username} 
-          />
+            Put your name here (if you feel like it):
+            <input
+              onChange={HandleChange}
+              type="text"
+              name="username"
+              value={formData.username} 
+            />
           </label>  
+
           <label>
-          Leave us your email pretty please??
-          <input
-            onChange={HandleChange}
-            type="email"
-            name="email"
-            value={formData.email} 
-          />
+            Leave us your email pretty please??
+            <input
+              onChange={HandleChange}
+              type="email"
+              name="email"
+              value={formData.email} 
+            />
           </label>
+
           <input 
             onClick={handleSubmit}
             className="form__submit" 

@@ -3,7 +3,7 @@ function SpendTime ({formData, HandleChange}) {
     
     return (
         <div className="form__group">
-        <h3>How do you like to spend time with your rubber duck</h3>
+            <h3>How do you like to spend time with your rubber duck</h3>
             <ul>
                 <li>
                     <label>
