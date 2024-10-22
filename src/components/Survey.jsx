@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AnswersItem from "./AnswersItem";
 import BestFeatures from "./BestFeatures";
 import WorstBits from "./WorstBits";
@@ -7,6 +7,7 @@ import DuckConsistency from "./DuckConsistency";
 import DuckColour from "./DuckColour";
 import DuckLogo from "./DuckLogo";
 import SpendTime from "../SpendTime";
+import { noXssOrSql } from "../Validation";
 
 function Survey() {
   const [open, setOpen] = useState(false); //Ignore this state
@@ -30,6 +31,15 @@ function Survey() {
   const [submittedAnswers, setSubmittedAnswers] = useState([]);
   const[formData, setFormData] = useState({...INITIAL_FORM_DATA});
   const[formDataChanged, setFormDataChanged] = useState({...FORM_DATA_MODIFIED});
+  const[invalidInput, setInvalidInput] = useState(false);
+
+  const inputValidation = (value) => {
+    if (noXssOrSql(value)) {
+      setInvalidInput(true);
+    } else {
+      setInvalidInput(false);
+    }
+  };
 
   const handleCheckboxChange = (name, value, checked) => {
     const updateFormData = { ...formData };
@@ -50,6 +60,7 @@ function Survey() {
       if (type === "checkbox") {
         handleCheckboxChange(name, value, checked);
       } else {
+        inputValidation(value);
         setFormData({ ...formData, [name]: value });
         setFormDataChanged({ ...formDataChanged, [name]: true });
       }
@@ -59,7 +70,7 @@ function Survey() {
   const handleSubmit = () => {
     const newAnswerItem = { ...formData };
     setSubmittedAnswers([...submittedAnswers, newAnswerItem]);
-    setFormData(INITIAL_FORM_DATA); // Reset form data
+    setFormData(INITIAL_FORM_DATA);
   };
 
   const handleEdit = (index) => {
@@ -129,6 +140,7 @@ function Survey() {
             className="form__submit" 
             type="button" 
             value="Submit Survey!"
+            disabled={invalidInput}
           />
         </form>
       </section>
