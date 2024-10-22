@@ -40,6 +40,7 @@ export default function AnswersItem({
     review },
     index,
     handleEdit,
+    setEdit,
 }) {
 
   return (
@@ -85,7 +86,7 @@ export default function AnswersItem({
           <span className="answer__line">{review}</span>
         </p>
 
-        <button onClick={() => handleEdit(index)}>Edit</button>
+        <button onClick={() => {handleEdit(index); setEdit(true); }}>Edit</button>
       </article>
     </li>
   );

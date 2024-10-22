@@ -29,9 +29,11 @@ function Survey() {
   }
 
   const [submittedAnswers, setSubmittedAnswers] = useState([]);
-  const[formData, setFormData] = useState({...INITIAL_FORM_DATA});
-  const[formDataChanged, setFormDataChanged] = useState({...FORM_DATA_MODIFIED});
-  const[invalidInput, setInvalidInput] = useState(false);
+  const [formData, setFormData] = useState({...INITIAL_FORM_DATA});
+  const [formDataChanged, setFormDataChanged] = useState({...FORM_DATA_MODIFIED});
+  const [invalidInput, setInvalidInput] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [index, setIndex] = useState();
 
   const inputValidation = (value) => {
     if (noXssOrSql(value)) {
@@ -73,10 +75,16 @@ function Survey() {
     setFormData(INITIAL_FORM_DATA);
   };
 
-  const handleEdit = (index) => {
-    const newAnswerItem = {...formData};
+  const submitEdit = (index) => {
+    const newAnswerItem = { ...formData };
     submittedAnswers[index] = newAnswerItem;
+    setEdit(false);
     setFormData(INITIAL_FORM_DATA);
+  };
+
+  const handleEdit = (index) => {
+    setIndex(index);
+    setFormData(submittedAnswers[index]);
   };
 
   return (
@@ -89,6 +97,8 @@ function Survey() {
           answerItem={answer} 
           index={index}
           handleEdit={() => handleEdit(index)}
+          setEdit={setEdit}
+          setIndex={setIndex}
           />
         ))}
       </section>
@@ -136,7 +146,7 @@ function Survey() {
           </label>
 
           <input 
-            onClick={handleSubmit}
+            onClick={() => { edit ? submitEdit(index) : handleSubmit(); }}
             className="form__submit" 
             type="button" 
             value="Submit Survey!"
