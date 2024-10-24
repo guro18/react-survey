@@ -32,10 +32,11 @@ export default function AnswersItem({
     features, 
     worstBits, 
     timeSpent, 
-    review },
+    review,
+    id },
     handleEdit,
     setEdit,
-    id
+    handleDelete,
 }) {
 
   return (
@@ -82,6 +83,7 @@ export default function AnswersItem({
         </p>
 
         <button onClick={() => {handleEdit(id); setEdit(true); }}>Edit</button>
+        <button onClick={() => handleDelete(id)}>Delete</button>
       </article>
     </li>
   );

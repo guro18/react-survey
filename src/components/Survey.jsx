@@ -125,6 +125,21 @@ function Survey() {
     setId(id);
   };
 
+  const handleDelete = (id) => {
+    fetch(`http://localhost:3000/formData/${id}`, {
+      method: "DELETE",
+      headers: {"Content-Type": "application/json" }
+    })
+      .then(response => {
+        if (response.ok) {
+          fetchFormData();
+        } else {
+          throw new Error('Error deleting data');
+        }
+      })
+      .catch(error => console.error('Error deleting data: ', error));
+  };
+
   return (
     <main className="survey">
       <section className={`survey__list ${open ? "open" : ""}`}>
@@ -136,6 +151,7 @@ function Survey() {
           id={id}
           handleEdit={() => handleEdit(answer.id)}
           setEdit={setEdit}
+          handleDelete={handleDelete}
           />
         ))}
       </section>
