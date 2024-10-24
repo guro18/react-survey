@@ -1,7 +1,5 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable react/prop-types */
-// Components don't need to be separeted into individual files
-// Here we have a smaller component that helps compose the AnswersItem below
 
 const answersSet = {
   swimming: "Swimming",
@@ -25,10 +23,7 @@ function ItemsList({ list }) {
   );
 }
 
-// This is the main component being exported from this file
 export default function AnswersItem({
-  // Feel free to change this props names to what suits you best
-  // Rememeber here we're destructuring answerItem, which is the prop name that we've passed
   answerItem: { 
     username, 
     color, 
@@ -38,9 +33,9 @@ export default function AnswersItem({
     worstBits, 
     timeSpent, 
     review },
-    index,
     handleEdit,
     setEdit,
+    id
 }) {
 
   return (
@@ -86,7 +81,7 @@ export default function AnswersItem({
           <span className="answer__line">{review}</span>
         </p>
 
-        <button onClick={() => {handleEdit(index); setEdit(true); }}>Edit</button>
+        <button onClick={() => {handleEdit(id); setEdit(true); }}>Edit</button>
       </article>
     </li>
   );

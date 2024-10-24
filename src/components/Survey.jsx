@@ -10,7 +10,7 @@ import SpendTime from "../SpendTime";
 import { noXssOrSql } from "../Validation";
 
 function Survey() {
-  const [open, setOpen] = useState(false); //Ignore this state
+  const [open, setOpen] = useState(false);
 
   const INITIAL_FORM_DATA = {
     username: "",
@@ -26,15 +26,30 @@ function Survey() {
 
   const FORM_DATA_MODIFIED = {
     username: false,
-  }
+  };
 
   const [submittedAnswers, setSubmittedAnswers] = useState([]);
   const [formData, setFormData] = useState({...INITIAL_FORM_DATA});
   const [formDataChanged, setFormDataChanged] = useState({...FORM_DATA_MODIFIED});
   const [invalidInput, setInvalidInput] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [index, setIndex] = useState();
+  const [id, setId] = useState();
 
+  const fetchFormData = () => {
+    fetch('http://localhost:3000/formData')
+      .then(response => response.json())
+      .then(data => {
+        setSubmittedAnswers(data);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  };
+
+  //fetch data upon every render
+  useEffect(() => {
+    fetchFormData();
+  }, []);
+
+  //protect against XSS and SQL Injections
   const inputValidation = (value) => {
     if (noXssOrSql(value)) {
       setInvalidInput(true);
@@ -71,34 +86,56 @@ function Survey() {
 
   const handleSubmit = () => {
     const newAnswerItem = { ...formData };
-    setSubmittedAnswers([...submittedAnswers, newAnswerItem]);
-    setFormData(INITIAL_FORM_DATA);
+
+    fetch("http://localhost:3000/formData", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newAnswerItem)
+    })
+      .then(response => response.json())
+      .then(() => {
+        fetchFormData();
+        setFormData(INITIAL_FORM_DATA);
+      })
+      .catch(error => console.error('Error posting data:', error));
   };
 
-  const submitEdit = (index) => {
-    const newAnswerItem = { ...formData };
-    submittedAnswers[index] = newAnswerItem;
-    setEdit(false);
-    setFormData(INITIAL_FORM_DATA);
+  const submitEdit = (id) => {
+    const updatedAnswerItem = { ...formData };
+    
+    fetch(`http://localhost:3000/formData/${id}`, {
+      method: "PUT",
+      headers: {"Content-Type": "application/json" },
+      body: JSON.stringify(updatedAnswerItem)
+    })
+      .then(response => response.json())
+      .then(() => {
+        fetchFormData();
+        setEdit(false);
+        setFormData(INITIAL_FORM_DATA);
+      })
+      .catch(error => console.error('Error updating data: ', error));
   };
 
-  const handleEdit = (index) => {
-    setIndex(index);
-    setFormData(submittedAnswers[index]);
+  const handleEdit = (id) => {
+    const answerToEdit = submittedAnswers.find(answer => answer.id === id);
+
+    setFormData(answerToEdit);
+    setEdit(true);
+    setId(id);
   };
 
   return (
     <main className="survey">
       <section className={`survey__list ${open ? "open" : ""}`}>
         <h2>Answers list</h2>
-        {submittedAnswers.map((answer, index) => (
+        {submittedAnswers.map((answer) => (
           <AnswersItem 
-          key={index} 
+          key={answer.id} 
           answerItem={answer} 
-          index={index}
-          handleEdit={() => handleEdit(index)}
+          id={id}
+          handleEdit={() => handleEdit(answer.id)}
           setEdit={setEdit}
-          setIndex={setIndex}
           />
         ))}
       </section>
@@ -108,9 +145,11 @@ function Survey() {
           <h2>Tell us what you think about your rubber duck!</h2>
           <BestFeatures formData={formData} HandleChange={HandleChange}/>
           <WorstBits formData={formData} HandleChange={HandleChange}/>
-          <DuckConsistency formData={formData}HandleChange={HandleChange}/>
+
           <DuckColour formData={formData} HandleChange={HandleChange}/>
+          <DuckConsistency formData={formData}HandleChange={HandleChange}/>
           <DuckLogo formData={formData} HandleChange={HandleChange}/>
+
           <SpendTime formData={formData} HandleChange={HandleChange}/>
 
           <label>
@@ -146,12 +185,13 @@ function Survey() {
           </label>
 
           <input 
-            onClick={() => { edit ? submitEdit(index) : handleSubmit(); }}
+            onClick={() => { edit ? submitEdit(id) : handleSubmit(); }}
             className="form__submit" 
             type="button" 
             value="Submit Survey!"
             disabled={invalidInput}
           />
+
         </form>
       </section>
     </main>
